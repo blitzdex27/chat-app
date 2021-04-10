@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
   googleId: String,
   email: String,
   profilePicture: String,
-  posts: Array,
+  messages: Array,
   contacts: Array,
 });
 
