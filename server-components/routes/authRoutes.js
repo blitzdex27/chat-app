@@ -21,7 +21,7 @@ module.exports = (app) => {
       (req, res) => {
         console.log("Successfully logged in.");
         // res.header("Access-Control-Allow-Origin", "*");
-        res.json({ isAuthenticated: req.isAuthenticated() });
+        res.redirect("/api/user");
       }
     );
 
@@ -29,6 +29,7 @@ module.exports = (app) => {
     .route("/signup")
 
     .post((req, res) => {
+      console.log(req.body);
       const username = req.body.username;
       const password = req.body.password;
       const givenName = req.body.givenName;
@@ -48,34 +49,43 @@ module.exports = (app) => {
         (err, account) => {
           if (err) {
             console.log(err);
+            res.json({ error: err });
           } else {
             passport.authenticate("local")(req, res, function (result) {
-              res.redirect("/api");
+              res.redirect("/api/user");
             });
           }
         }
       );
     });
 
-  app.get("/api", (req, res) => {
-    console.log(req.user);
-    res.json({
-      isAuthenticated: req.isAuthenticated(),
-      userInfo: {
-        id: req.user.id,
-        username: req.user.username,
-        displayName: req.user.displayName,
-        givenName: req.user.givenName,
-        familyName: req.body.familyName,
-        email: req.user.username,
-        messages: req.user.messages,
-        contacts: req.user.contacts,
-      },
-    });
+  app.get("/api/user", (req, res, next) => {
+    if (req.isAuthenticated()) {
+      console.log(req.user);
+
+      // res.set({
+      //   'Access-Control-Allow-Origin': "http://localhost:3000"
+      // })
+
+
+      res.json({
+        isAuthenticated: req.isAuthenticated(),
+        userInfo: {
+          id: req.user.id,
+          username: req.user.username,
+          displayName: req.user.displayName,
+          givenName: req.user.givenName,
+          familyName: req.body.familyName,
+          email: req.user.username,
+          messages: req.user.messages,
+          contacts: req.user.contacts,
+        },
+      });
+    }
   });
 
   app
-    .route("/signin")
+    .route("/login")
 
     .post((req, res) => {
       const userCredentials = new User({
@@ -91,7 +101,7 @@ module.exports = (app) => {
           console.log("Authenticating user...");
           passport.authenticate("local")(req, res, () => {
             console.log("User us authenticated");
-            res.redirect("/");
+            res.redirect("/api/user");
           });
         }
       });
