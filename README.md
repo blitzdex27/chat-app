@@ -1,11 +1,11 @@
-# Instructions
+# Readme
 
-Pre-requisites:
+# Pre-requisites:
 1. Node.js (https://nodejs.org/en/)
 2. nodemon (npm install -g nodemon)
 3. MongoDB local (https://www.mongodb.com/try/download/community)
 
-
+# Instructions
 1. Open using VS Code the root directory
 2. From VS Code terminal: "npm install"
 3. Open another instance of terminal. Then enter: "mongod" to start the mongodb local database
